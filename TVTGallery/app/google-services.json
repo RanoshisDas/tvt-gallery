@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "594066448224",
+    "project_id": "tvt-gallery",
+    "storage_bucket": "tvt-gallery.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594066448224:android:c6d6ee9f106377a855c805",
+        "android_client_info": {
+          "package_name": "com.ranoshisdas.app.tvtgallery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE29wxspWrsq2Ue9MGCI14Nh5aX-EFazk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
