@@ -13,44 +13,44 @@
         android:layout_gravity="top|start"
         android:gravity="start">
 
+    <ImageButton
+        android:id="@+id/back"
+        android:padding="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_back"
+        amdroid:tint="@color/white" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:layout_gravity="top|end"
+        android:gravity="end">
+
         <ImageButton
-            android:id="@+id/back"
-            android:padding="12dp"
+            android:id="@+id/btnShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/share"
             amdroid:tint="@color/white" />
-        <LinearLayout
-            android:layout_width="match_parent"
+        <View
+            android:layout_width="20dp"
+            android:layout_height="2dp"/>
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:layout_gravity="top|end"
-            android:gravity="end">
+            android:background="@android:color/transparent"
+            android:src="@drawable/baseline_delete_24"
+            amdroid:tint="@color/white" />
+        <View
+            android:layout_width="10dp"
+            android:layout_height="2dp"/>
 
-            <ImageButton
-                android:id="@+id/btnShare"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:src="@drawable/share"
-                amdroid:tint="@color/white" />
-            <View
-                android:layout_width="20dp"
-                android:layout_height="2dp"/>
-            <ImageButton
-                android:id="@+id/delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:src="@drawable/baseline_delete_24"
-                amdroid:tint="@color/white" />
-            <View
-                android:layout_width="10dp"
-                android:layout_height="2dp"/>
-
-        </LinearLayout>
+    </LinearLayout>
     </LinearLayout>
 
     <androidx.viewpager2.widget.ViewPager2

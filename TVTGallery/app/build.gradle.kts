@@ -64,8 +64,6 @@ dependencies {
 
     //video player
     implementation (libs.exoplayer)
-    implementation (libs.glide)
-    annotationProcessor (libs.compiler)
 
     implementation (libs.conscrypt.android)
 

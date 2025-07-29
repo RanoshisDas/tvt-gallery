@@ -7,7 +7,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.ranoshisdas.app.tvtgallery.utils.ImageStorageHelper;
@@ -37,10 +41,9 @@ public class SecretImagePreviewActivity extends AppCompatActivity {
 
         adapter = new ImagePagerAdapter(this, imageUris);
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(startIndex, true); // Set the initial image to display
+        viewPager.setCurrentItem(startIndex, true);
 
-
-        btnBack.setOnClickListener(v -> {
+        btnBack.setOnClickListener(v ->{
             startActivity(new Intent(this, SecreteMain.class));
             finish();
         });
@@ -55,26 +58,22 @@ public class SecretImagePreviewActivity extends AppCompatActivity {
             Uri imageUri = imageUris.get(position);
             String imageName = new File(imageUri.getPath()).getName().replace(".enc", "");
 
-            // Attempt to delete the encrypted image from storage
+            // Delete from storage
             if (ImageStorageHelper.deleteEncryptedImage(imageName)) {
                 Toast.makeText(this, "Image Deleted", Toast.LENGTH_SHORT).show();
                 imageUris.remove(position);
                 adapter.notifyItemRemoved(position);
 
-                // If no more images, close the activity and go back to SecreteMain
+                // If no more images, close the activity
                 if (imageUris.isEmpty()) {
                     startActivity(new Intent(this, SecreteMain.class));
                     finish();
-                } else if (position == imageUris.size()) {
-                    // If the last image was deleted, show the new last image
-                    viewPager.setCurrentItem(imageUris.size() - 1, false);
                 }
             } else {
                 Toast.makeText(this, "Failed to Delete Image", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Set OnClickListener for the Restore button
         btnRestore.setOnClickListener(v -> {
             int position = viewPager.getCurrentItem();
             if (position < 0 || position >= imageUris.size()) {
@@ -83,34 +82,23 @@ public class SecretImagePreviewActivity extends AppCompatActivity {
             }
 
             Uri imageUri = imageUris.get(position);
-            // Extract the original image name from the URI path by removing the ".enc" extension
             String imageName = new File(imageUri.getPath()).getName().replace(".enc", "");
 
-            // Attempt to restore the encrypted image
-            if (ImageStorageHelper.restoreImage(getApplicationContext(), imageName)) {
+            // Delete from storage
+            if (ImageStorageHelper.restoreImage(getApplicationContext(),imageName)) {
                 Toast.makeText(this, "Image Restored!", Toast.LENGTH_SHORT).show();
-                // Remove the image URI from the list and notify the adapter
                 imageUris.remove(position);
                 adapter.notifyItemRemoved(position);
 
-                // If no more images, close the activity and go back to SecreteMain
+                // If no more images, close the activity
                 if (imageUris.isEmpty()) {
                     startActivity(new Intent(this, SecreteMain.class));
                     finish();
-                } else if (position == imageUris.size()) {
-                    // If the last image was restored, show the new last image
-                    viewPager.setCurrentItem(imageUris.size() - 1, false);
                 }
             } else {
                 Toast.makeText(this, "Failed to Restore the Image", Toast.LENGTH_SHORT).show();
             }
         });
-    }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, SecreteMain.class));
-        finish();
     }
 }
