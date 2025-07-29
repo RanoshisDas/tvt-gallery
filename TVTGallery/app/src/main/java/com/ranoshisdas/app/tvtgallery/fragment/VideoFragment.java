@@ -2,8 +2,6 @@ package com.ranoshisdas.app.tvtgallery.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide; // Import Glide
 import com.ranoshisdas.app.tvtgallery.R;
 import com.ranoshisdas.app.tvtgallery.VideoPlayerActivity;
 
@@ -48,14 +48,17 @@ public class VideoFragment extends Fragment {
     }
 
     private void loadVideos() {
+        videoList.clear(); // Clear existing list to avoid duplicates on resume
         Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {
                 MediaStore.Video.Media.DATA,
                 MediaStore.Video.Media.DISPLAY_NAME,
                 MediaStore.Video.Media.DURATION
         };
+        // Order by date modified in descending order to show most recent videos first
+        String orderBy = MediaStore.Video.Media.DATE_MODIFIED + " DESC";
 
-        try (Cursor cursor = requireContext().getContentResolver().query(uri, projection, null, null, null)) {
+        try (Cursor cursor = requireContext().getContentResolver().query(uri, projection, null, null, orderBy)) {
             if (cursor != null) {
                 int dataIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
                 int nameIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
@@ -67,8 +70,12 @@ public class VideoFragment extends Fragment {
                     long duration = cursor.getLong(durationIndex);
                     videoList.add(new VideoModel(title, path, duration));
                 }
-                videoAdapter.notifyDataSetChanged();
+                videoAdapter.notifyDataSetChanged(); // Notify adapter after data is loaded
             }
+        } catch (Exception e) {
+            // Log or show a toast for error in loading videos
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Error loading videos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -116,9 +123,14 @@ public class VideoFragment extends Fragment {
             title.setText(video.getTitle());
             duration.setText(formatDuration(video.getDuration()));
 
-            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(
-                    video.getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
-            thumbnail.setImageBitmap(thumb);
+            // Use Glide to load video thumbnail asynchronously
+            Glide.with(itemView.getContext())
+                    .asBitmap() // Request a Bitmap
+                    .load(video.getPath()) // Load from video file path
+                    .placeholder(R.drawable.placeholder) // Placeholder image while loading
+                    .error(R.drawable.error) // Error image if loading fails
+                    .into(thumbnail); // Target ImageView
+            // Removed ThumbnailUtils.createVideoThumbnail as Glide handles it efficiently
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(getContext(), VideoPlayerActivity.class);

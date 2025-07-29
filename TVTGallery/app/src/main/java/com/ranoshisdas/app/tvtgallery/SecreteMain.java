@@ -52,8 +52,11 @@ public class SecreteMain extends AppCompatActivity {
 
     // Step 2: Select multiple images from gallery
     private void selectImages() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setType("*/*");
+        String[] mimeTypes = {"image/*", "video/*"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         galleryLauncher.launch(intent);
     }
 
@@ -98,7 +101,9 @@ public class SecreteMain extends AppCompatActivity {
 
     private String getRealPathFromURI(Uri contentUri) {
         String result = null;
-        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+        String orderBy = MediaStore.Images.Media.DATE_MODIFIED + " DESC";
+
+        Cursor cursor = getContentResolver().query(contentUri, null, null, null, orderBy);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
